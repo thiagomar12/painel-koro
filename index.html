@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Koro · Painel de Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--orange:#FF6900;--navy:#002F6C;--light:#00A3E0;--green:#1F8A3B;--grey:#555;--line:#E2E8F0;--soft:#EAF4FB;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins',system-ui,Arial,sans-serif;background:#F4F6F9;color:#222;padding:24px;display:flex;justify-content:center}
+  .page{width:100%;max-width:860px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.08)}
+  .banner{background:var(--orange);color:#fff;padding:22px 30px}
+  .banner .top{font-size:20px;font-weight:800;letter-spacing:.3px}
+  .banner .top span{font-weight:600;opacity:.95}
+  .banner .sub{font-size:13px;opacity:.92;margin-top:3px}
+  .controls{display:flex;align-items:center;gap:14px;background:var(--navy);padding:13px 30px;color:#fff;flex-wrap:wrap}
+  .controls label{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;opacity:.85}
+  select{font-family:inherit;font-size:14px;font-weight:600;color:var(--navy);background:#fff;border:none;border-radius:7px;padding:7px 12px;cursor:pointer}
+  .controls .stamp{margin-left:auto;font-size:11px;opacity:.8;font-weight:400}
+  .body{padding:24px 30px 28px}
+  .sec{font-size:15px;font-weight:700;color:var(--navy);border-bottom:2px solid var(--orange);padding-bottom:6px;margin:24px 0 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .sec:first-child{margin-top:0}
+  .sec .small{font-weight:400;font-size:11px;color:var(--grey)}
+  .sec select{margin-left:auto;font-size:13px;padding:5px 10px}
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .kpi{padding:14px 12px;border-radius:8px;background:#F2F2F2}
+  .kpi.hi{background:var(--soft)}.kpi.roas{background:#E8F5EC}
+  .kpi .v{font-size:21px;font-weight:800;line-height:1.1;color:var(--navy)}
+  .kpi.hi .v{color:var(--orange)}.kpi.roas .v{color:var(--green)}
+  .kpi .l{font-size:11px;color:var(--grey);margin-top:4px}
+  .lead{font-size:13.5px;color:#333;margin-top:14px;line-height:1.5}
+  .funwrap{display:grid;grid-template-columns:1.55fr 1fr;gap:22px;align-items:start}
+  .funnel{display:flex;flex-direction:column;align-items:center;width:100%}
+  .fstage{width:100%;display:flex;flex-direction:column;align-items:center}
+  .fcap{font-size:11.5px;color:var(--navy);font-weight:600;margin-bottom:4px;text-align:center}
+  .fbar{height:46px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;box-shadow:0 2px 7px rgba(0,0,0,.13);transition:width .3s}
+  .fconv{font-size:11.5px;color:var(--grey);text-align:center;padding:7px 0;font-weight:500}
+  .fconv b{color:var(--orange);font-weight:700}
+  .froas{margin-top:16px;width:100%;background:#E8F5EC;border:1px solid #BBE3C6;border-radius:11px;padding:13px;text-align:center;color:#1F6B30;font-weight:600;font-size:12.5px;line-height:1.4}
+  .froas .rv{display:block;font-size:25px;font-weight:800;color:var(--green);line-height:1;margin-bottom:3px}
+  .fside{display:flex;flex-direction:column;gap:8px}
+  .fmetric{background:#F7FAFD;border:1px solid var(--line);border-radius:8px;padding:10px 13px;display:flex;justify-content:space-between;align-items:center}
+  .fmetric .ml{font-size:11.5px;color:var(--grey)}
+  .fmetric .mv{font-size:15px;font-weight:700;color:var(--navy)}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{background:var(--navy);color:#fff;text-align:left;padding:9px 10px;font-weight:600;font-size:11.5px;border:1px solid var(--navy)}
+  td{padding:8px 10px;border:1px solid var(--line)}
+  tbody tr:nth-child(even){background:#F7FAFD}
+  td.evt{font-weight:600}td.new{color:var(--green);font-weight:600}
+  .read li{font-size:13.5px;line-height:1.5;margin:0 0 9px 20px;color:#333}
+  .read li b{color:var(--navy)}.read li::marker{color:var(--orange)}
+  .note{font-size:10.5px;color:var(--grey);font-style:italic;border-top:1px solid var(--line);margin-top:18px;padding-top:10px}
+  .foot{border-top:3px solid var(--orange);padding:12px 30px;font-size:12px;color:var(--grey)}
+  .foot b{color:var(--orange)}
+  @media(max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)}.funwrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="banner">
+    <div class="top">koro <span>· PAINEL DE PERFORMANCE</span></div>
+    <div class="sub">Campanhas de Mídia Paga · Meta Ads</div>
+  </div>
+  <div class="controls">
+    <label>Cliente</label>
+    <select id="clientSel"></select>
+    <span class="stamp" id="stamp"></span>
+  </div>
+  <div class="body">
+    <div class="sec">Resultado acumulado <span class="small" id="scopeLbl"></span></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="lead" id="lead"></div>
+
+    <div class="sec">Funil do evento <select id="eventSel"></select></div>
+    <div class="funwrap">
+      <div class="funnel" id="funnel"></div>
+      <div class="fside" id="fside"></div>
+    </div>
+
+    <div class="sec">Evolução por semana <span class="small">(acumulado do mês a cada puxada)</span></div>
+    <table id="evolucao"><thead><tr>
+      <th>Até</th><th>Investido</th><th>Inscrições</th><th>Novas na semana</th><th>Receita</th><th>ROAS</th>
+    </tr></thead><tbody></tbody></table>
+
+    <div class="sec">Leitura da Koro</div>
+    <ul class="read" id="read"></ul>
+    <div class="note" id="note"></div>
+  </div>
+  <div class="foot"><b>koro</b> &nbsp; Conecte. Pulse. Vibre.</div>
+</div>
+
+<script>
+/* =========================================================
+   DADOS — é só isto que muda toda semana.
+   Cada snapshot é a puxada de SEGUNDA, com o mês inteiro acumulado.
+   Cada campanha traz cliente + evento (lidos da nomenclatura [CLIENTE] Evento).
+   Semana nova: copie o último snapshot, troque o "label" e atualize os
+   números acumulados. Cliente/evento novo: adicione mais um objeto na lista.
+   ========================================================= */
+const REPORT = {
+  cicloLabel: "Junho/2026",
+  atualizado: "16/06/2026",
+  snapshots: [
+    {
+      label: "16 jun",
+      campanhas: [
+        { cliente:"IUG",          evento:"Mauá Night Run",          investido:207.32, impressoes:24187, alcance:6694,  carrinho:205, inscricoes:69, receita:20370.80 },
+        { cliente:"IUG",          evento:"Corrida Família Diadema",  investido:422.74, impressoes:51286, alcance:10663, carrinho:224, inscricoes:68, receita:10517.30 },
+        { cliente:"MAZZA",        evento:"Peruíbe Run",              investido:237.79, impressoes:31492, alcance:5889,  carrinho:44,  inscricoes:7,  receita:1760.95 },
+        { cliente:"XTRY",         evento:"Grand Plaza Run 2026",     investido:688.00, impressoes:66582, alcance:17637, carrinho:132, inscricoes:47, receita:4800.00 },
+        { cliente:"XTRY",         evento:"Cãominhada Grand Plaza",   investido:464.01, impressoes:53905, alcance:20061, carrinho:41,  inscricoes:18, receita:2160.00 },
+        { cliente:"TBF",          evento:"ASC Princesas Barueri",    investido:641.81, impressoes:68550, alcance:24884, carrinho:117, inscricoes:22, receita:3199.71 },
+        { cliente:"TBF",          evento:"Borboletas Run Tietê",     investido:637.15, impressoes:41504, alcance:11754, carrinho:62,  inscricoes:21, receita:4039.71 },
+        { cliente:"TBF",          evento:"Lilás",                    investido:558.98, impressoes:50963, alcance:18496, carrinho:93,  inscricoes:13, receita:2999.63 },
+        { cliente:"DKL",          evento:"Buriquioca 3 Etapa",       investido:10.61,  impressoes:1210,  alcance:700,   carrinho:5,   inscricoes:0,  receita:0 },
+        { cliente:"ROTA DO PICO", evento:"4x4",                      investido:96.95,  impressoes:6747,  alcance:3134,  carrinho:5,   inscricoes:0,  receita:0 },
+        { cliente:"ICE KORO",     evento:"Maratona Goiânia",         investido:283.66, impressoes:36467, alcance:11300, carrinho:116, inscricoes:8,  receita:1810.00 },
+      ]
+    },
+    // { label:"23 jun", campanhas:[ ...mesmas campanhas com números acumulados, + novos clientes/eventos... ] },
+  ]
+};
+
+/* ===================== helpers ===================== */
+const brl  = n => "R$ " + n.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const brl0 = n => "R$ " + Math.round(n).toLocaleString("pt-BR");
+const num  = n => Math.round(n).toLocaleString("pt-BR");
+const pct  = (a,b) => b>0 ? (a/b*100).toLocaleString("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1})+"%" : "—";
+const roas = (r,s) => s>0 ? (r/s).toLocaleString("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1})+"x" : "—";
+const cpa  = (s,i) => i>0 ? brl(s/i) : "—";
+const key  = c => c.cliente+" || "+c.evento;
+const agg  = list => list.reduce((a,e)=>({investido:a.investido+e.investido,impressoes:a.impressoes+e.impressoes,alcance:a.alcance+e.alcance,carrinho:a.carrinho+e.carrinho,inscricoes:a.inscricoes+e.inscricoes,receita:a.receita+e.receita}),{investido:0,impressoes:0,alcance:0,carrinho:0,inscricoes:0,receita:0});
+
+const S = REPORT.snapshots;
+const last = S[S.length-1];
+const ALL = "__all__";
+const params = new URLSearchParams(window.location.search);
+const clienteParam = params.get("cliente");
+
+let curClient = clienteParam;
+let curEvent = null;
+
+document.getElementById("stamp").textContent = "Atualizado em " + REPORT.atualizado;
+
+const clients = [...new Set(last.campanhas.map(c=>c.cliente))];
+if (clienteParam) {
+  if (!clients.includes(clienteParam)) {
+    document.body.innerHTML = `
+      <div style="font-family: Poppins, Arial; text-align:center; margin-top:80px;">
+        <h2>Cliente não encontrado</h2>
+        <p>O cliente informado é inválido ou não possui dados disponíveis.</p>
+      </div>
+    `;
+
+    throw new Error("Cliente inválido");
+  }
+
+  curClient = clienteParam;
+} else {
+  // Sem parâmetro, não permite visualizar todos
+  document.body.innerHTML = `
+    <div style="font-family: Poppins, Arial; text-align:center; margin-top:80px;">
+      <h2>Acesso negado</h2>
+      <p>É necessário informar um cliente válido na URL.</p>
+    </div>
+  `;
+
+  throw new Error("Parâmetro 'cliente' obrigatório");
+}
+const clientSel = document.getElementById("clientSel");
+clientSel.innerHTML = `
+  <option value="${curClient}">${curClient}</option>
+`;
+
+clientSel.disabled = true;
+const eventSel = document.getElementById("eventSel");
+
+function campaignsFor(client){ return client===ALL ? last.campanhas : last.campanhas.filter(c=>c.cliente===client); }
+
+function populateEvents(){
+  const list = campaignsFor(curClient);
+  eventSel.innerHTML = list.map(c=>`<option value="${key(c)}">${curClient===ALL? "["+c.cliente+"] ":""}${c.evento}</option>`).join("");
+  if(!list.some(c=>key(c)===curEvent)) curEvent = list.length? key(list[0]) : null;
+  eventSel.value = curEvent;
+}
+
+function renderKPIs(){
+  const t = agg(campaignsFor(curClient));
+  const k = [
+    {v:brl0(t.investido),l:"Investido"},
+    {v:num(t.inscricoes),l:"Inscrições",c:"hi"},
+    {v:cpa(t.investido,t.inscricoes),l:"CPA",c:"hi"},
+    {v:brl0(t.receita),l:"Receita"},
+    {v:roas(t.receita,t.investido),l:"ROAS",c:"roas"},
+  ];
+  document.getElementById("kpis").innerHTML = k.map(x=>`<div class="kpi ${x.c||''}"><div class="v">${x.v}</div><div class="l">${x.l}</div></div>`).join("");
+  document.getElementById("scopeLbl").textContent = (curClient===ALL? "· todos os clientes" : "· "+curClient) + " · até "+last.label;
+  document.getElementById("lead").textContent = t.investido>0
+    ? `Cada R$ 1 investido retornou ${roas(t.receita,t.investido).replace('x','')} em receita de inscrições no acumulado do mês.` : "";
+}
+
+function renderFunnel(){
+  const c = campaignsFor(curClient).find(x=>key(x)===curEvent);
+  const fun = document.getElementById("funnel"), side = document.getElementById("fside");
+  if(!c){ fun.innerHTML=""; side.innerHTML=""; return; }
+  const stages = [
+    {l:"Impressões",          v:num(c.impressoes), color:"#002F6C"},
+    {l:"Alcance",             v:num(c.alcance),    color:"#0A4E97"},
+    {l:"Adições ao carrinho", v:num(c.carrinho),   color:"#2070B8"},
+    {l:"Inscrições",          v:num(c.inscricoes), color:"var(--orange)"},
+    {l:"Valor gerado",        v:brl0(c.receita),   color:"var(--green)"},
+  ];
+  const widths = [100, 82, 64, 50, 42];
+  const conv = [
+    `frequência de <b>${(c.impressoes/(c.alcance||1)).toLocaleString("pt-BR",{maximumFractionDigits:1})}x</b> por pessoa`,
+    `<b>${pct(c.carrinho,c.alcance)}</b> do alcance foi pro carrinho`,
+    `<b>${pct(c.inscricoes,c.carrinho)}</b> do carrinho virou inscrição`,
+    `<b>${c.inscricoes>0? brl(c.receita/c.inscricoes):"—"}</b> de ticket médio por inscrição`,
+  ];
+  let html="";
+  stages.forEach((s,i)=>{
+    if(i>0) html+=`<div class="fconv">↓ &nbsp;${conv[i-1]}</div>`;
+    html+=`<div class="fstage"><div class="fcap">${s.l}</div><div class="fbar" style="width:${widths[i]}%;background:${s.color}">${s.v}</div></div>`;
+  });
+  const ratio = c.investido>0 ? c.receita/c.investido : 0;
+  html+=`<div class="froas"><span class="rv">${roas(c.receita,c.investido)}</span>ROAS · cada R$ 1 investido virou <b>${brl(ratio)}</b> em receita</div>`;
+  fun.innerHTML = html;
+  const metrics = [
+    {l:"Investido", v:brl(c.investido)},
+    {l:"CPM", v:brl(c.impressoes>0? c.investido/c.impressoes*1000:0)},
+    {l:"Custo por inscrição", v:cpa(c.investido,c.inscricoes)},
+    {l:"Ticket médio", v:c.inscricoes>0? brl(c.receita/c.inscricoes):"—"},
+  ];
+  side.innerHTML = metrics.map(m=>`<div class="fmetric"><span class="ml">${m.l}</span><span class="mv">${m.v}</span></div>`).join("");
+}
+
+function renderEvolucao(){
+  let prev=0;
+  document.querySelector("#evolucao tbody").innerHTML = S.map(snap=>{
+    const list = curClient===ALL? snap.campanhas : snap.campanhas.filter(c=>c.cliente===curClient);
+    const t = agg(list);
+    const nova = t.inscricoes - prev; prev = t.inscricoes;
+    return `<tr><td class="evt">${snap.label}</td><td>${brl(t.investido)}</td><td>${num(t.inscricoes)}</td><td class="new">+${num(nova)}</td><td>${brl(t.receita)}</td><td>${roas(t.receita,t.investido)}</td></tr>`;
+  }).join("");
+}
+
+function renderRead(){
+  const list = [...campaignsFor(curClient)].sort((a,b)=>(b.receita/b.investido)-(a.receita/a.investido));
+  const t = agg(list);
+  const reads=[];
+  if(list.length){
+    const best=list[0], worst=list[list.length-1];
+    reads.push(`<b>${best.evento} é o destaque:</b> CPA de ${cpa(best.investido,best.inscricoes)} e ROAS de ${roas(best.receita,best.investido)}. Melhor relação custo-resultado — vale priorizar orçamento aqui.`);
+    if(list.length>1) reads.push(`<b>${worst.evento} tem o maior custo:</b> CPA de ${cpa(worst.investido,worst.inscricoes)}. Espaço pra otimizar criativo e segmentação.`);
+    const nc = t.carrinho - t.inscricoes;
+    if(nc>0) reads.push(`<b>Oportunidade no carrinho:</b> ${num(t.carrinho)} adições ao carrinho e ${num(t.inscricoes)} inscrições — cerca de ${num(nc)} atletas começaram e não finalizaram. Ativar a régua de recuperação da Koro pode converter parte disso sem gastar mais em mídia.`);
+  }
+  document.getElementById("read").innerHTML = reads.map(r=>`<li>${r}</li>`).join("");
+}
+
+function renderAll(){ renderKPIs(); renderFunnel(); renderEvolucao(); renderRead(); }
+
+clientSel.addEventListener("change", e=>{ curClient=e.target.value; populateEvents(); renderAll(); });
+eventSel.addEventListener("change", e=>{ curEvent=e.target.value; renderFunnel(); });
+
+populateEvents(); renderAll();
+document.getElementById("note").textContent = "Receita = valor de conversão de compras atribuído pelo pixel no Gerenciador de Anúncios. Inscrições = compras registradas no site. Números acumulados do mês.";
+</script>
+</body>
+</html>
