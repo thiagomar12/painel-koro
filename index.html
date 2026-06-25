@@ -110,7 +110,7 @@ const REPORT = {
         { id: "10", cliente:"IUG",          evento:"Corrida Família Diadema",  investido:422.74, impressoes:51286, alcance:10663, carrinho:224, inscricoes:68, receita:10517.30 },
         { id: "1", cliente:"DEVSIGNER",        evento:"Peruíbe Run",              investido:237.79, impressoes:31492, alcance:5889,  carrinho:44,  inscricoes:7,  receita:1760.95 },
         { id: "11", cliente:"XTRY",         evento:"Grand Plaza Run 2026",     investido:688.00, impressoes:66582, alcance:17637, carrinho:132, inscricoes:47, receita:4800.00 },
-        { id: "12", cliente:"XTRY",         evento:"Cãominhada Grand Plaza",   investido:464.01, impressoes:53905, alcance:20061, carrinho:41,  inscricoes:18, receita:2160.00 },
+        { id: "11", cliente:"XTRY",         evento:"Cãominhada Grand Plaza",   investido:464.01, impressoes:53905, alcance:20061, carrinho:41,  inscricoes:18, receita:2160.00 },
         { id: "13", cliente:"TBF",          evento:"ASC Princesas Barueri",    investido:641.81, impressoes:68550, alcance:24884, carrinho:117, inscricoes:22, receita:3199.71 },
         { id: "13", cliente:"TBF",          evento:"Borboletas Run Tietê",     investido:637.15, impressoes:41504, alcance:11754, carrinho:62,  inscricoes:21, receita:4039.71 },
         { id: "13", cliente:"TBF",          evento:"Lilás",                    investido:558.98, impressoes:50963, alcance:18496, carrinho:93,  inscricoes:13, receita:2999.63 },
@@ -145,6 +145,7 @@ let curEvent = null;
 document.getElementById("stamp").textContent = "Atualizado em " + REPORT.atualizado;
 
 const clients = [...new Set(last.campanhas.map(c=>c.id))];
+
 if (clienteParam) {
   if (!clients.includes(clienteParam)) {
     document.body.innerHTML = `
@@ -170,8 +171,10 @@ if (clienteParam) {
   throw new Error("Parâmetro 'cliente' obrigatório");
 }
 const clientSel = document.getElementById("clientSel");
+const nomeCliente =
+  last.campanhas.find(c => c.id === curClient)?.cliente || curClient;
 clientSel.innerHTML = `
-  <option value="${curClient}">${curClient}</option>
+  <option value="${curClient}">${nomeCliente}</option>
 `;
 
 clientSel.disabled = true;
