@@ -106,17 +106,17 @@ const REPORT = {
     {
       label: "16 jun",
       campanhas: [
-        { cliente:"IUG",          evento:"Mauá Night Run",          investido:207.32, impressoes:24187, alcance:6694,  carrinho:205, inscricoes:69, receita:20370.80 },
-        { cliente:"IUG",          evento:"Corrida Família Diadema",  investido:422.74, impressoes:51286, alcance:10663, carrinho:224, inscricoes:68, receita:10517.30 },
-        { cliente:"DEVSIGNER",        evento:"Peruíbe Run",              investido:237.79, impressoes:31492, alcance:5889,  carrinho:44,  inscricoes:7,  receita:1760.95 },
-        { cliente:"XTRY",         evento:"Grand Plaza Run 2026",     investido:688.00, impressoes:66582, alcance:17637, carrinho:132, inscricoes:47, receita:4800.00 },
-        { cliente:"XTRY",         evento:"Cãominhada Grand Plaza",   investido:464.01, impressoes:53905, alcance:20061, carrinho:41,  inscricoes:18, receita:2160.00 },
-        { cliente:"TBF",          evento:"ASC Princesas Barueri",    investido:641.81, impressoes:68550, alcance:24884, carrinho:117, inscricoes:22, receita:3199.71 },
-        { cliente:"TBF",          evento:"Borboletas Run Tietê",     investido:637.15, impressoes:41504, alcance:11754, carrinho:62,  inscricoes:21, receita:4039.71 },
-        { cliente:"TBF",          evento:"Lilás",                    investido:558.98, impressoes:50963, alcance:18496, carrinho:93,  inscricoes:13, receita:2999.63 },
-        { cliente:"DKL",          evento:"Buriquioca 3 Etapa",       investido:10.61,  impressoes:1210,  alcance:700,   carrinho:5,   inscricoes:0,  receita:0 },
-        { cliente:"ROTA DO PICO", evento:"4x4",                      investido:96.95,  impressoes:6747,  alcance:3134,  carrinho:5,   inscricoes:0,  receita:0 },
-        { cliente:"ICE KORO",     evento:"Maratona Goiânia",         investido:283.66, impressoes:36467, alcance:11300, carrinho:116, inscricoes:8,  receita:1810.00 },
+        { id: "10", cliente:"IUG",          evento:"Mauá Night Run",          investido:207.32, impressoes:24187, alcance:6694,  carrinho:205, inscricoes:69, receita:20370.80 },
+        { id: "10", cliente:"IUG",          evento:"Corrida Família Diadema",  investido:422.74, impressoes:51286, alcance:10663, carrinho:224, inscricoes:68, receita:10517.30 },
+        { id: "1", cliente:"DEVSIGNER",        evento:"Peruíbe Run",              investido:237.79, impressoes:31492, alcance:5889,  carrinho:44,  inscricoes:7,  receita:1760.95 },
+        { id: "11", cliente:"XTRY",         evento:"Grand Plaza Run 2026",     investido:688.00, impressoes:66582, alcance:17637, carrinho:132, inscricoes:47, receita:4800.00 },
+        { id: "12", cliente:"XTRY",         evento:"Cãominhada Grand Plaza",   investido:464.01, impressoes:53905, alcance:20061, carrinho:41,  inscricoes:18, receita:2160.00 },
+        { id: "13", cliente:"TBF",          evento:"ASC Princesas Barueri",    investido:641.81, impressoes:68550, alcance:24884, carrinho:117, inscricoes:22, receita:3199.71 },
+        { id: "13", cliente:"TBF",          evento:"Borboletas Run Tietê",     investido:637.15, impressoes:41504, alcance:11754, carrinho:62,  inscricoes:21, receita:4039.71 },
+        { id: "13", cliente:"TBF",          evento:"Lilás",                    investido:558.98, impressoes:50963, alcance:18496, carrinho:93,  inscricoes:13, receita:2999.63 },
+        { id: "14", cliente:"DKL",          evento:"Buriquioca 3 Etapa",       investido:10.61,  impressoes:1210,  alcance:700,   carrinho:5,   inscricoes:0,  receita:0 },
+        { id: "15", cliente:"ROTA DO PICO", evento:"4x4",                      investido:96.95,  impressoes:6747,  alcance:3134,  carrinho:5,   inscricoes:0,  receita:0 },
+        { id: "16", cliente:"ICE KORO",     evento:"Maratona Goiânia",         investido:283.66, impressoes:36467, alcance:11300, carrinho:116, inscricoes:8,  receita:1810.00 },
       ]
     },
     // { label:"23 jun", campanhas:[ ...mesmas campanhas com números acumulados, + novos clientes/eventos... ] },
@@ -144,7 +144,7 @@ let curEvent = null;
 
 document.getElementById("stamp").textContent = "Atualizado em " + REPORT.atualizado;
 
-const clients = [...new Set(last.campanhas.map(c=>c.cliente))];
+const clients = [...new Set(last.campanhas.map(c=>c.id))];
 if (clienteParam) {
   if (!clients.includes(clienteParam)) {
     document.body.innerHTML = `
