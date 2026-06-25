@@ -239,7 +239,7 @@ function renderFunnel(){
 function renderEvolucao(){
   let prev=0;
   document.querySelector("#evolucao tbody").innerHTML = S.map(snap=>{
-    const list = curClient===ALL? snap.campanhas : snap.campanhas.filter(c=>c.id===curClient);
+    const list = curClient===ALL? snap.campanhas : snap.campanhas.filter(c=>c.cliente===curClient);
     const t = agg(list);
     const nova = t.inscricoes - prev; prev = t.inscricoes;
     return `<tr><td class="evt">${snap.label}</td><td>${brl(t.investido)}</td><td>${num(t.inscricoes)}</td><td class="new">+${num(nova)}</td><td>${brl(t.receita)}</td><td>${roas(t.receita,t.investido)}</td></tr>`;
